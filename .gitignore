@@ -24,8 +24,10 @@ website/node_modules
 *.iml
 *.test
 *.iml
+*.env
 
 website/vendor
+examples/provider-install-verification
 
 # Test exclusions
 !command/test-fixtures/**/*.tfstate
