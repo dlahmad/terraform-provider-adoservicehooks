@@ -27,21 +27,21 @@ package provider
 // 					pat,
 // 				),
 // 				Check: resource.ComposeAggregateTestCheckFunc(
-// 					resource.TestCheckResourceAttr("adowebhooks_subscription.test", "event_type", "git.push"),
-// 					resource.TestCheckResourceAttr("adowebhooks_subscription.test", "consumer_id", "webHooks"),
-// 					resource.TestCheckResourceAttr("adowebhooks_subscription.test", "consumer_inputs.url", "https://example.com/webhook"),
-// 					resource.TestCheckResourceAttr("adowebhooks_subscription.test", "publisher_id", "publisher-id"),
-// 					resource.TestCheckResourceAttr("adowebhooks_subscription.test", "publisher_inputs.repository", "some-repo"),
-// 					resource.TestCheckResourceAttr("adowebhooks_subscription.test", "publisher_inputs.branch", "some-branch"),
-// 					resource.TestCheckResourceAttr("adowebhooks_subscription.test", "publisher_inputs.pushed_by", "some-user"),
-// 					resource.TestCheckResourceAttr("adowebhooks_subscription.test", "publisher_inputs.project_id", "test-project"),
+// 					resource.TestCheckResourceAttr("adoservicehooks_subscription.test", "event_type", "git.push"),
+// 					resource.TestCheckResourceAttr("adoservicehooks_subscription.test", "consumer_id", "webHooks"),
+// 					resource.TestCheckResourceAttr("adoservicehooks_subscription.test", "consumer_inputs.url", "https://example.com/webhook"),
+// 					resource.TestCheckResourceAttr("adoservicehooks_subscription.test", "publisher_id", "publisher-id"),
+// 					resource.TestCheckResourceAttr("adoservicehooks_subscription.test", "publisher_inputs.repository", "some-repo"),
+// 					resource.TestCheckResourceAttr("adoservicehooks_subscription.test", "publisher_inputs.branch", "some-branch"),
+// 					resource.TestCheckResourceAttr("adoservicehooks_subscription.test", "publisher_inputs.pushed_by", "some-user"),
+// 					resource.TestCheckResourceAttr("adoservicehooks_subscription.test", "publisher_inputs.project_id", "test-project"),
 // 					// Assuming "id" and other fields will be set correctly
-// 					resource.TestCheckResourceAttrSet("adowebhooks_subscription.test", "id"),
+// 					resource.TestCheckResourceAttrSet("adoservicehooks_subscription.test", "id"),
 // 				),
 // 			},
 // 			// ImportState testing
 // 			{
-// 				ResourceName:            "adowebhooks_subscription.test",
+// 				ResourceName:            "adoservicehooks_subscription.test",
 // 				ImportState:             true,
 // 				ImportStateVerify:       true,
 // 				ImportStateVerifyIgnore: []string{"consumer_inputs", "publisher_inputs"}, // Ignore these for this test
@@ -61,13 +61,13 @@ package provider
 // 					pat,
 // 				),
 // 				Check: resource.ComposeAggregateTestCheckFunc(
-// 					resource.TestCheckResourceAttr("adowebhooks_subscription.test", "consumer_id", "webHooks"),
-// 					resource.TestCheckResourceAttr("adowebhooks_subscription.test", "consumer_inputs.url", "https://example.com/updated_webhook"),
-// 					resource.TestCheckResourceAttr("adowebhooks_subscription.test", "publisher_id", "updated-publisher-id"),
-// 					resource.TestCheckResourceAttr("adowebhooks_subscription.test", "publisher_inputs.repository", "updated-repo"),
-// 					resource.TestCheckResourceAttr("adowebhooks_subscription.test", "publisher_inputs.branch", "updated-branch"),
-// 					resource.TestCheckResourceAttr("adowebhooks_subscription.test", "publisher_inputs.pushed_by", "updated-user"),
-// 					resource.TestCheckResourceAttr("adowebhooks_subscription.test", "publisher_inputs.project_id", "updated-project"),
+// 					resource.TestCheckResourceAttr("adoservicehooks_subscription.test", "consumer_id", "webHooks"),
+// 					resource.TestCheckResourceAttr("adoservicehooks_subscription.test", "consumer_inputs.url", "https://example.com/updated_webhook"),
+// 					resource.TestCheckResourceAttr("adoservicehooks_subscription.test", "publisher_id", "updated-publisher-id"),
+// 					resource.TestCheckResourceAttr("adoservicehooks_subscription.test", "publisher_inputs.repository", "updated-repo"),
+// 					resource.TestCheckResourceAttr("adoservicehooks_subscription.test", "publisher_inputs.branch", "updated-branch"),
+// 					resource.TestCheckResourceAttr("adoservicehooks_subscription.test", "publisher_inputs.pushed_by", "updated-user"),
+// 					resource.TestCheckResourceAttr("adoservicehooks_subscription.test", "publisher_inputs.project_id", "updated-project"),
 // 				),
 // 			},
 // 		},
@@ -79,12 +79,12 @@ package provider
 // 	eventType, consumerId, url, repository, branch, pushedBy, projectId, publisherId, org, pat string,
 // ) string {
 // 	return fmt.Sprintf(`
-// provider "adowebhooks" {
+// provider "adoservicehooks" {
 //   organization = "%s"
 //   pat          = "%s"
 // }
 
-// resource "adowebhooks_subscription" "test" {
+// resource "adoservicehooks_subscription" "test" {
 //   consumer_action_id = "some-action"
 //   consumer_id        = "%s"
 //   consumer_inputs = {

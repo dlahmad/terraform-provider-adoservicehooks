@@ -1,4 +1,4 @@
-resource "adowebhooks_subscription" "example" {
+resource "adoservicehooks_subscription" "example" {
   consumer_action_id = "httpRequest"
   consumer_id        = "webHooks"
   consumer_inputs = {

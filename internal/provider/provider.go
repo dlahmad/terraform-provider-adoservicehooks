@@ -44,7 +44,7 @@ type azureDevopsWebhooksProvider struct {
 
 // Metadata returns the provider type name.
 func (p *azureDevopsWebhooksProvider) Metadata(_ context.Context, _ provider.MetadataRequest, resp *provider.MetadataResponse) {
-	resp.TypeName = "adowebhooks"
+	resp.TypeName = "adoservicehooks"
 	resp.Version = p.version
 }
 
@@ -81,7 +81,7 @@ func (p *azureDevopsWebhooksProvider) Configure(ctx context.Context, req provide
 			path.Root("organization"),
 			"Unknown AzureDevOps Organization",
 			"The provider cannot create the client because it needs to know the AzureDevOps organization. "+
-				"Set the organization value in the configuration or use the ADOWEBHOOKS_ORGANIZATION environment variable. "+
+				"Set the organization value in the configuration or use the adoservicehooks_ORGANIZATION environment variable. "+
 				"If either is already set, ensure the value is not empty.",
 		)
 	}
@@ -91,7 +91,7 @@ func (p *azureDevopsWebhooksProvider) Configure(ctx context.Context, req provide
 			path.Root("pat"),
 			"Unknown AzureDevOps PAT",
 			"The provider cannot create the client because it needs to know the AzureDevOps PAT. "+
-				"Set the password value in the configuration or use the ADOWEBHOOKS_PAT environment variable. "+
+				"Set the password value in the configuration or use the adoservicehooks_PAT environment variable. "+
 				"If either is already set, ensure the value is not empty.",
 		)
 	}
@@ -102,8 +102,8 @@ func (p *azureDevopsWebhooksProvider) Configure(ctx context.Context, req provide
 
 	// Default values to environment variables, but override
 	// with Terraform configuration value if set.
-	organization := os.Getenv("ADOWEBHOOKS_ORGANIZATION")
-	pat := os.Getenv("ADOWEBHOOKS_PAT")
+	organization := os.Getenv("adoservicehooks_ORGANIZATION")
+	pat := os.Getenv("adoservicehooks_PAT")
 
 	if !config.Organization.IsNull() {
 		organization = config.Organization.ValueString()
@@ -121,7 +121,7 @@ func (p *azureDevopsWebhooksProvider) Configure(ctx context.Context, req provide
 			path.Root("organization"),
 			"Missing AzureDevOps Organization",
 			"The provider cannot create the client because it needs to know the AzureDevOps organization. "+
-				"Set the organization value in the configuration or use the ADOWEBHOOKS_ORGANIZATION environment variable. "+
+				"Set the organization value in the configuration or use the adoservicehooks_ORGANIZATION environment variable. "+
 				"If either is already set, ensure the value is not empty.",
 		)
 	}
@@ -131,7 +131,7 @@ func (p *azureDevopsWebhooksProvider) Configure(ctx context.Context, req provide
 			path.Root("pat"),
 			"Missing AzureDevOps PAT",
 			"The provider cannot create the client because it needs to know the AzureDevOps PAT. "+
-				"Set the password value in the configuration or use the ADOWEBHOOKS_PAT environment variable. "+
+				"Set the password value in the configuration or use the adoservicehooks_PAT environment variable. "+
 				"If either is already set, ensure the value is not empty.",
 		)
 	}

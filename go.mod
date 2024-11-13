@@ -1,4 +1,4 @@
-module terraform-provider-adowebhooks
+module terraform-provider-adoservicehooks
 
 go 1.22.7
 
