@@ -155,7 +155,7 @@ func ConvertToJSONModel(tf *WebhookSubscriptionTF) *WebhookSubscription {
 	}
 }
 
-// Convert from JSON structs to Terraform SDK structs
+// Convert from JSON structs to Terraform SDK structs.
 func ConvertToTFModel(json *WebhookSubscription) *WebhookSubscriptionTF {
 	return &WebhookSubscriptionTF{
 		ConsumerActionId: types.StringPointerValue(json.ConsumerActionId),
@@ -184,7 +184,7 @@ func ConvertToTFModel(json *WebhookSubscription) *WebhookSubscriptionTF {
 	}
 }
 
-// Helper function to handle optional strings in Terraform SDK
+// Helper function to handle optional strings in Terraform SDK.
 func getOptionalString(t types.String) *string {
 	if t.IsNull() || t.IsUnknown() {
 		return nil
@@ -193,7 +193,7 @@ func getOptionalString(t types.String) *string {
 	return &val
 }
 
-// Helper function to handle optional int64 in Terraform SDK
+// Helper function to handle optional int64 in Terraform SDK.
 func getOptionalInt64(t types.Int64) *int64 {
 	if t.IsNull() || t.IsUnknown() {
 		return nil

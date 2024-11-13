@@ -73,7 +73,7 @@ func TestAccSubscriptionResource(t *testing.T) {
 	})
 }
 
-// Helper function to generate the resource configuration for testing
+// Helper function to generate the resource configuration for testing.
 func testAccSubscriptionResourceConfig(
 	eventType, consumerId, url, repository, branch, pushedBy, projectId, publisherId string,
 ) string {
