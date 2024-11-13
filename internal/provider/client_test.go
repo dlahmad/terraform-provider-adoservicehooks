@@ -39,22 +39,32 @@ func TestClient(t *testing.T) {
 		t.Fail()
 	}
 
-	resN, err := client.CreateOrUpdateWebhook(project, repository, hookUrl, "git.push", nil)
-	if err != nil || resN.ID == "" || resN.EventType == "" {
+	subscription := DefaultWebhookSubscription()
+	subscription.PublisherInputs = &PublisherInputs{
+		RepositoryId: &repository,
+		Branch:       stringToPointer("master"),
+		ProjectId:    &project,
+	}
+	subscription.ConsumerInputs = &ConsumerInputs{
+		URL: stringToPointer(hookUrl),
+	}
+
+	resN, err := client.CreateOrUpdateWebhook(subscription)
+	if err != nil || resN.ID == nil || resN.EventType == nil {
 		t.Fail()
 	}
 
-	resN, err = client.GetWebhook(resN.ID)
-	if err != nil || resN.ID == "" || resN.EventType == "" {
+	resN, err = client.GetWebhook(*resN.ID)
+	if err != nil || resN.ID == nil || resN.EventType == nil {
 		t.Fail()
 	}
 
-	resN, err = client.CreateOrUpdateWebhook(project, repository, hookUrl, "git.push", &resN.ID)
-	if err != nil || resN.ID == "" {
+	resN, err = client.CreateOrUpdateWebhook(resN)
+	if err != nil || resN.ID == nil {
 		t.Fail()
 	}
 
-	err = client.DeleteWebhook(project, resN.ID)
+	err = client.DeleteWebhook(*resN.ID)
 	if err != nil {
 		t.Fail()
 	}

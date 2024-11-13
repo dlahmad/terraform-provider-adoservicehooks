@@ -11,27 +11,6 @@ import (
 	"time"
 )
 
-type ConsumerInputs struct {
-	URL string `json:"url"`
-}
-
-type PublisherInputs struct {
-	Repository string `json:"repository"`
-	ProjectId  string `json:"projectId"`
-}
-
-type Event struct {
-	ID               *string         `json:"id,omitempty"`
-	ConsumerActionId string          `json:"consumerActionId"`
-	ConsumerId       string          `json:"consumerId"`
-	ConsumerInputs   ConsumerInputs  `json:"consumerInputs"`
-	EventType        string          `json:"eventType"`
-	PublisherId      string          `json:"publisherId"`
-	PublisherInputs  PublisherInputs `json:"publisherInputs"`
-	ResourceVersion  string          `json:"resourceVersion"`
-	Scope            int             `json:"scope"`
-}
-
 type Client struct {
 	HTTPClient   *http.Client
 	Organization string
@@ -138,7 +117,7 @@ func (c *Client) GetRepositoryGuid(project, repository string) (*IdResponse, err
 	return &webhookResponse, nil
 }
 
-func (c *Client) GetWebhook(webhookID string) (*WebhookResponse, error) {
+func (c *Client) GetWebhook(webhookID string) (*WebhookSubscription, error) {
 	req, err := c.createRawRequest("GET", c.BaseURL+c.Organization+"/_apis/hooks/subscriptions/"+webhookID+"/?api-version=7.0", nil)
 	if err != nil {
 		return nil, err
@@ -154,7 +133,7 @@ func (c *Client) GetWebhook(webhookID string) (*WebhookResponse, error) {
 		return nil, fmt.Errorf("failed to get webhook, status code: %d", resp.StatusCode)
 	}
 
-	var webhookResponse WebhookResponse
+	var webhookResponse WebhookSubscription
 	if err := json.NewDecoder(resp.Body).Decode(&webhookResponse); err != nil {
 		return nil, fmt.Errorf("failed to parse response: %w", err)
 	}
@@ -162,28 +141,17 @@ func (c *Client) GetWebhook(webhookID string) (*WebhookResponse, error) {
 	return &webhookResponse, nil
 }
 
-func (c *Client) CreateOrUpdateWebhook(projectId, repositoryId, url, eventType string, webhookId *string) (*WebhookResponse, error) {
-	event := Event{
-		ConsumerActionId: "httpRequest",
-		ConsumerId:       "webHooks",
-		ConsumerInputs:   ConsumerInputs{URL: url},
-		EventType:        eventType,
-		PublisherId:      "tfs",
-		PublisherInputs:  PublisherInputs{Repository: repositoryId, ProjectId: projectId},
-		ResourceVersion:  "1.0",
-		Scope:            1,
-		ID:               webhookId,
-	}
+func (c *Client) CreateOrUpdateWebhook(subscription *WebhookSubscription) (*WebhookSubscription, error) {
 
 	verb := "POST"
 
 	// Simulating a ternary operation
-	if webhookId != nil {
+	if subscription.ID != nil {
 		verb = "PUT"
 	}
 
 	// Create the request
-	req, err := c.createRawRequest(verb, c.BaseURL+c.Organization+"/_apis/hooks/subscriptions?api-version=7.0", event)
+	req, err := c.createRawRequest(verb, c.BaseURL+c.Organization+"/_apis/hooks/subscriptions?api-version=7.0", subscription)
 	if err != nil {
 		return nil, err
 	}
@@ -201,7 +169,7 @@ func (c *Client) CreateOrUpdateWebhook(projectId, repositoryId, url, eventType s
 	}
 
 	// Parse the response into WebhookResponse
-	var webhookResponse WebhookResponse
+	var webhookResponse WebhookSubscription
 	if err := json.NewDecoder(resp.Body).Decode(&webhookResponse); err != nil {
 		return nil, fmt.Errorf("failed to parse response: %w", err)
 	}
@@ -209,7 +177,7 @@ func (c *Client) CreateOrUpdateWebhook(projectId, repositoryId, url, eventType s
 	return &webhookResponse, nil
 }
 
-func (c *Client) DeleteWebhook(project, webhookID string) error {
+func (c *Client) DeleteWebhook(webhookID string) error {
 	req, err := c.createRawRequest("DELETE", c.BaseURL+c.Organization+"/_apis/hooks/subscriptions/"+webhookID+"?api-version=7.0", nil)
 	if err != nil {
 		return err
@@ -226,14 +194,6 @@ func (c *Client) DeleteWebhook(project, webhookID string) error {
 	}
 
 	return nil
-}
-
-type WebhookResponse struct {
-	ID              string          `json:"id"`
-	URL             string          `json:"url"`
-	EventType       string          `json:"eventType"`
-	PublisherInputs PublisherInputs `json:"publisherInputs"`
-	ConsumerInputs  ConsumerInputs  `json:"consumerInputs"`
 }
 
 type IdResponse struct {

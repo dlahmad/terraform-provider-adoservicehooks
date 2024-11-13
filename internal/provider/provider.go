@@ -156,7 +156,6 @@ func (p *azureDevopsWebhooksProvider) Configure(ctx context.Context, req provide
 	// type Configure methods.
 	resp.DataSourceData = client
 	resp.ResourceData = client
-
 }
 
 // DataSources defines the data sources implemented in the provider.
@@ -167,6 +166,6 @@ func (p *azureDevopsWebhooksProvider) DataSources(_ context.Context) []func() da
 // Resources defines the resources implemented in the provider.
 func (p *azureDevopsWebhooksProvider) Resources(_ context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
-		NewRepositoryWebhookResource,
+		NewSubscriptionResource,
 	}
 }
