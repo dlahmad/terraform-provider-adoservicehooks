@@ -9,6 +9,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
 
@@ -158,6 +159,12 @@ func (r *SubscriptionResource) Create(ctx context.Context, req resource.CreateRe
 		return
 	}
 
+	// Save password before request
+	var basicAuthPassword *string = nil
+	if data.ConsumerInputs != nil && !data.ConsumerInputs.BasicAuthPassword.IsNull() {
+		basicAuthPassword = data.ConsumerInputs.BasicAuthPassword.ValueStringPointer()
+	}
+
 	requestData := ConvertToJSONModel(&data)
 
 	// Create the webhook using the client and pass the project_id
@@ -174,6 +181,11 @@ func (r *SubscriptionResource) Create(ctx context.Context, req resource.CreateRe
 
 	// Set the webhook ID after creation
 	data = *ConvertToTFModel(webhookResponse)
+
+	// The API response replaces the password with "****" however, to compare the state correctly we need to keep the original pw
+	if basicAuthPassword != nil && data.ConsumerInputs != nil {
+		data.ConsumerInputs.BasicAuthPassword = types.StringPointerValue(basicAuthPassword)
+	}
 
 	// Log creation
 	tflog.Trace(ctx, "Created Azure DevOps Webhook")
@@ -192,6 +204,12 @@ func (r *SubscriptionResource) Read(ctx context.Context, req resource.ReadReques
 		return
 	}
 
+	// Save password before request
+	var basicAuthPassword *string = nil
+	if data.ConsumerInputs != nil && !data.ConsumerInputs.BasicAuthPassword.IsNull() {
+		basicAuthPassword = data.ConsumerInputs.BasicAuthPassword.ValueStringPointer()
+	}
+
 	// Get the webhook using the client and pass the project_id
 	webhookResponse, err := r.client.GetWebhook(data.ID.ValueString())
 	if err != nil {
@@ -204,6 +222,11 @@ func (r *SubscriptionResource) Read(ctx context.Context, req resource.ReadReques
 
 	// Update the model with the current state of the webhook
 	data = *ConvertToTFModel(webhookResponse)
+
+	// The API response replaces the password with "****" however, to compare the state correctly we need to keep the original pw
+	if basicAuthPassword != nil && data.ConsumerInputs != nil {
+		data.ConsumerInputs.BasicAuthPassword = types.StringPointerValue(basicAuthPassword)
+	}
 
 	// Save the updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -226,6 +249,12 @@ func (r *SubscriptionResource) Update(ctx context.Context, req resource.UpdateRe
 		return
 	}
 
+	// Save password before request
+	var basicAuthPassword *string = nil
+	if planData.ConsumerInputs != nil && !planData.ConsumerInputs.BasicAuthPassword.IsNull() {
+		basicAuthPassword = planData.ConsumerInputs.BasicAuthPassword.ValueStringPointer()
+	}
+
 	// Get the webhook ID from the current state
 	planData.ID = stateData.ID
 	// Log the webhook ID to verify it's being retrieved from the state correctly
@@ -245,6 +274,11 @@ func (r *SubscriptionResource) Update(ctx context.Context, req resource.UpdateRe
 
 	// Set the updated values (from the response) to planData
 	updatedData := ConvertToTFModel(webhookResponse)
+
+	// The API response replaces the password with "****" however, to compare the state correctly we need to keep the original pw
+	if basicAuthPassword != nil && updatedData.ConsumerInputs != nil {
+		updatedData.ConsumerInputs.BasicAuthPassword = types.StringPointerValue(basicAuthPassword)
+	}
 
 	// Save the updated data into Terraform state (from planData which now holds updated values)
 	resp.Diagnostics.Append(resp.State.Set(ctx, updatedData)...)
