@@ -16,12 +16,12 @@ resource "adoservicehooks_subscription" "example" {
   consumer_inputs = {
     url          = "https://triggerservice.com/webhook"
     http_headers = "TRIGGERSOURCE:DEVOPS"
-  } project
+  }
   event_type   = "git.push"
   publisher_id = "tfs"
   publisher_inputs = {
-    project_id = "3d994ea0-b3c3-4fca-8318-91ec3d042b9d" 
-    repository = "760d53d4-f394-44fc-ab00-5932b6b7da9d" 
+    project_id = "3d994ea0-b3c3-4fca-8318-91ec3d042b9d"
+    repository = "760d53d4-f394-44fc-ab00-5932b6b7da9d"
   }
 }
 ```
